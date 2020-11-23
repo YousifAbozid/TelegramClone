@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './App.css'
-import Telegram from './components/Telegram'
-import Login from './components/Login'
+import Telegram from './components/Telegram/Telegram'
+import Login from './components/Login/Login'
 import { auth } from './firebase'
 import { login, logout, selectUser } from './features/userSlice'
 

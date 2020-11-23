@@ -3,7 +3,7 @@ import './SideBar.css'
 import SearchIcon from "@material-ui/icons/Search"
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined'
 import { Avatar, IconButton } from '@material-ui/core'
-import SideBarThread from './SideBarThread'
+import SideBarThread from '../SideBarThread/SideBarThread'
 import { PhoneOutlined, QuestionAnswerOutlined, Settings } from '@material-ui/icons'
 
 const SideBar = () => {
