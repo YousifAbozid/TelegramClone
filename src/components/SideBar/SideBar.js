@@ -1,13 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './SideBar.css'
 import SearchIcon from "@material-ui/icons/Search"
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined'
 import { Avatar, IconButton } from '@material-ui/core'
 import SideBarThread from '../SideBarThread/SideBarThread'
 import { PhoneOutlined, QuestionAnswerOutlined, Settings } from '@material-ui/icons'
-import { auth } from '../../firebase'
+import database, { auth } from '../../firebase'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../features/userSlice'
 
 const SideBar = () => {
+    const user = useSelector(selectUser)
+    const [threads, setThreads] = useState([])
+
+    useEffect(() => {
+        database
+            .collection('threads')
+            .onSnapshot((snapshot) => {
+                setThreads(snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data()
+                })))
+        })
+    }, [])
+
+    const addThread = () => {
+        const threadName = prompt("Enter a thread name.")
+        if (threadName) {
+            database
+                .collection('threads')
+                .add({ threadName })
+        }
+    }
+
     return (
         <div className="sidebar">
             <div className="sidebar__header">
@@ -16,12 +41,13 @@ const SideBar = () => {
                     <input placeholder="Search" className="sidebar__input" />
                 </div>
                 <IconButton variant="outlined" id="sidebar__button" >
-                    <BorderColorOutlinedIcon />
+                    <BorderColorOutlinedIcon onClick={addThread} />
                 </IconButton>
             </div>
             <div className="sidebar__threads">
-                <SideBarThread />
-                <SideBarThread />
+                {threads.map(({ id, data: { threadName } }) => (
+                    <SideBarThread key={id} id={id} threadName={threadName} />
+                ))}
             </div>
             <div className="sidebar__bottom">
                 <Avatar className="sidebar__bottom__avatar" onClick={() => auth.signOut()} />
