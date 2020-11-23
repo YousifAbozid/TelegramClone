@@ -1,9 +1,10 @@
 import React from 'react'
+import SideBar from './SideBar'
 
 const Telegram = () => {
     return (
         <div className="telegram">
-            telgram
+            <SideBar />
         </div>
     )
 }

@@ -1,10 +1,11 @@
 import React from 'react'
 import './App.css'
+import Telegram from './components/Telegram'
 
 const App = () => {
   return (
     <div>
-      <h1>Telegram Clone</h1>
+      <Telegram />
     </div>
   )
 }
