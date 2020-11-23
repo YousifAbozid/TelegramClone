@@ -1,9 +1,17 @@
+import React, { useState } from 'react'
 import { Avatar, IconButton } from '@material-ui/core'
 import { MoreHoriz } from '@material-ui/icons'
-import React from 'react'
 import './Thread.css'
 
 const Thread = () => {
+    const [input, setInput] = useState('')
+
+    const sendMessage = (event) => {
+        event.preventDefault()
+
+        setInput('')
+    }
+
     return (
         <div className="thread">
             <div className="thread__header">
@@ -17,6 +25,16 @@ const Thread = () => {
                 <IconButton>
                     <MoreHoriz className="thread__header__details" />
                 </IconButton>
+            </div>
+            <div className="thread__messages">messages</div>
+            <div className="thread__input">
+                <input
+                    placeholder="Type your message..."
+                    type="text"
+                    value={input}
+                    onChange={({ target }) => setInput(target.value)}
+                />
+                <button onClick={sendMessage}>send message</button>
             </div>
         </div>
     )
