@@ -18,24 +18,26 @@ const Thread = () => {
 
     useEffect(() => {
         if (threadId) {
-            database
-                .collection('threads')
-                .collection('messages')
-                .orderBy('timestamp', 'desc')
-                .onSnapShot((snapshot) => setMessages(snapshot.docs.map((doc) => {
-                    return {
-                        id: doc.id,
-                        data: doc.data
-                    }
-                })))
+            database.collection("threads")
+                .doc(threadId)
+                .collection("messages")
+                .orderBy("timestamp", "desc")
+                .onSnapshot((snapshot) => {
+                setMessages(
+                    snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data(),
+                    }))
+                )
+            })
         }
-    }, [])
+    }, [threadId])
 
     const sendMessage = (event) => {
         event.preventDefault()
         database
             .collection('threads')
-            .doc(threadId) // this not working now in 3:35 min, I know where is the bug and they don't ha
+            .doc(threadId)
             .collection('messages')
             .add({
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -45,8 +47,8 @@ const Thread = () => {
                 email: user.email,
                 displayName: user.displayName
             })
-
-        setInput('')
+            .then(() => setInput(''))
+            .catch((error) => console.log(error))
     }
 
     return (
@@ -55,7 +57,7 @@ const Thread = () => {
                 <div className="thread__header__contents">
                     <Avatar />
                     <div className="thread__header__contents__info">
-                        <h4>Threadname</h4>
+                        <h4>{threadName}</h4>
                         <h5>Last seen</h5>
                     </div>
                 </div>
@@ -69,7 +71,7 @@ const Thread = () => {
                 ))}
             </div>
             <div className="thread__input">
-                <form>
+                <form onSubmit={sendMessage}>
                     <input
                         placeholder="Type your message..."
                         type="text"
@@ -79,7 +81,7 @@ const Thread = () => {
                     <IconButton>
                         <TimerOutlined></TimerOutlined>
                     </IconButton>
-                    <IconButton onClick={sendMessage}>
+                    <IconButton type="submit">
                         <SendRounded />
                     </IconButton>
                     <IconButton>

@@ -1,15 +1,43 @@
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Avatar } from '@material-ui/core'
-import React from 'react'
 import './SideBarThread.css'
+import database from '../../firebase'
+import { setThread } from "../../features/threadSlice"
 
-const SideBarThread = () => {
+const SideBarThread = ({ id, threadName }) => {
+    const dispatch = useDispatch()
+    const [threadInfo, setThreadInfo] = useState([])
+
+    useEffect(() => {
+        database.collection("threads")
+            .doc(id)
+            .collection("messages")
+            .orderBy("timestamp", "desc")
+            .onSnapshot((snapshot) => {
+                setThreadInfo(snapshot.docs.map((doc) => doc.data()));
+            })
+    }, [id])
+
+    const handleClick = () => {
+        dispatch(setThread({
+            threadId: id,
+            threadName: threadName
+          }))
+    }
+
     return (
-        <div className="sidebarThread">
-            <Avatar />
+        <div
+            className="sidebarThread"
+            onClick={handleClick}
+        >
+            <Avatar src={threadInfo[0]?.photo} />
             <div className="sidebarThread__details">
-                <h3>Thread Name</h3>
-                <p>This is the info</p>
-                <small className="sidebarThread__timestamp">timestamp</small>
+                <h3>{threadName}</h3>
+                <p>{threadInfo[0]?.message}</p>
+                <small className="sidebarThread__timestamp">
+                    {new Date(threadInfo[0]?.timestamp?.toDate()).toLocaleString()}
+                </small>
             </div>
         </div>
     )

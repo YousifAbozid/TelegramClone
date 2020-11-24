@@ -11,8 +11,8 @@ const Message = ({ id, data: { timestamp, displayName, email, message, photo, ui
         <div className={`message ${user.email === email && `message__sender`}`} >
             <Avatar src={photo} className="message__photo" />
             <div className="message__contents">
-                <p> {message} </p>
-                <small> {new Date(timestamp?.toDate())} </small>
+                <p>{message}</p>
+                <small>{new Date(timestamp?.toDate()).toLocaleString()}</small>
             </div>
         </div>
     )
